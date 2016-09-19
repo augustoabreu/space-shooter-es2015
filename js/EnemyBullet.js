@@ -11,6 +11,7 @@ export default class EnemyBullet extends BaseBullet {
     self.context.clearRect(self.x-1, self.y-1, self.width+1, self.height+1);
     self.y -= self.speed;
 
+
     if (self.y >= self.canvasHeight) {
       return true;
     } else {

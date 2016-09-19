@@ -1,9 +1,10 @@
 export default class Pool {
-  constructor(maxSize, targetContext, Target, targetImage) {
+  constructor(maxSize, targetContext, Target, targetImage, optionData) {
     this.maxSize = maxSize;
     this.pool = [];
     this.Target = Target;
     this.targetImage = targetImage;
+    this.optionData = optionData;
     this.init(targetContext);
   }
 

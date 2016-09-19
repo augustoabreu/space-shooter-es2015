@@ -64,4 +64,8 @@ export default class Ship extends Drawable {
   animateBulletPool() {
     this.bulletPool.animate();
   }
+
+  getBulletPool() {
+    return this.bulletPool;
+  }
 }
