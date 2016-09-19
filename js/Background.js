@@ -2,8 +2,8 @@ import Drawable from './Drawable';
 import ImageRepository from './ImageRepository';
 
 export default class Background extends Drawable {
-  constructor(x, y, context, canvasWidth, canvasHeight) {
-    super(x, y, context, canvasWidth, canvasHeight);
+  constructor(x, y, context, width, height, canvasWidth, canvasHeight) {
+    super(x, y, context, width, height, canvasWidth, canvasHeight);
     this.speed = 1;
   }
 
@@ -14,8 +14,8 @@ export default class Background extends Drawable {
 
     self.y += self.speed;
     self.context.drawImage(background, self.x, self.y);
-    self.context.drawImage(background, self.x, self.y - self.canvasHeight);
+    self.context.drawImage(background, self.x, self.y - self.height);
 
-    if (self.y >= self.canvasHeight) self.y = 0;
+    if (self.y >= self.height) self.y = 0;
   }
 }
