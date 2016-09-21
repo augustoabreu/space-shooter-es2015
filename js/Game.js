@@ -4,6 +4,7 @@ import EnemyBulletPool from './EnemyBulletPool';
 import Ship from './Ship';
 import ImageRepository from './ImageRepository';
 import KeyboardManager from './KeyboardManager';
+import QuadTree from './QuadTree';
 
 class Game {
   constructor() {
@@ -60,6 +61,13 @@ class Game {
       }
     }
 
+    this.quadTree = new QuadTree({
+      x: 0,
+      y: 0,
+      width: canvasWidth,
+      height: canvasHeight
+    });
+
     self.ship.draw();
     self.start();
   }
@@ -69,11 +77,33 @@ class Game {
 
     requestAnimationFrame(self.start.bind(self));
 
+    // self.quadTree.clear();
+    // self.quadTree.insert(self.ship);
+    // self.quadTree.insert(self.ship.getBulletPool().getPool());
+    // self.quadTree.insert(self.enemyPool.getPool());
+    // self.quadTree.insert(self.enemyBulletPool.getPool());
+    //self.detectCollision();
+
     self.background.draw();
     self.ship.move();
     self.ship.animateBulletPool();
     self.enemyPool.animate();
     self.enemyBulletPool.animate();
+  }
+
+  detectCollision() {
+    const self = this,
+          objects = [];
+
+    self.quadTree.getAllObjects(objects);
+
+    objects.forEach((obj, i) => {
+      const target = [];
+      self.quadTree.findObjects(target, obj);
+      target.forEach((targ, j) => {
+        if (obj.collidableWith) {}
+      })
+    })
   }
 }
 

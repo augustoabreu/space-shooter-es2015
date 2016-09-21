@@ -1,16 +1,29 @@
 export default class Drawable {
   constructor(x, y, context, width, height, canvasWidth, canvasHeight) {
-    this.x = x;
-    this.y = y;
-    this.speed = 0;
-    this.width = width;
-    this.height = height;
-    this.canvasWidth = canvasWidth;
-    this.canvasHeight = canvasHeight;
-    this.context = context;
+    const self = this;
+
+    self.x = x;
+    self.y = y;
+    self.speed = 0;
+    self.width = width;
+    self.height = height;
+    self.canvasWidth = canvasWidth;
+    self.canvasHeight = canvasHeight;
+    self.context = context;
+    self.collidableWith = "";
+    self.isColliding = false;
+    self.type = "";
   }
 
   draw() {
 
+  }
+
+  move() {
+
+  }
+
+  isCollidableWith(target) {
+    return (this.isCollidableWith === target.type);
   }
 }

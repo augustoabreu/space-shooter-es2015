@@ -1,8 +1,13 @@
 import BaseBullet from './BaseBullet';
+import Ship from './Ship';
 import ImageRepository from './ImageRepository';
 
 export default class EnemyBullet extends BaseBullet {
+  constructor(x, y, context, width, height, canvasWidth, canvasHeight, target) {
+    super(x, y, context, width, height, canvasWidth, canvasHeight, target);
 
+    this.isCollidableWith = Ship;
+  }
   draw() {
     const self = this,
           imageRepository = new ImageRepository(),
@@ -11,6 +16,7 @@ export default class EnemyBullet extends BaseBullet {
     self.context.clearRect(self.x-1, self.y-1, self.width+1, self.height+1);
     self.y -= self.speed;
 
+    if (self.isColliding) return;
 
     if (self.y >= self.canvasHeight) {
       return true;

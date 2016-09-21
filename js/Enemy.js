@@ -73,5 +73,6 @@ export default class Enemy extends Drawable {
     self.speedX = 0;
     self.speedY = 0;
     self.alive = false;
+    self.isColliding = false;
   }
 }
