@@ -39,13 +39,13 @@ export default class Pool {
   }
 
   getPool() {
-    const ret = [];
-    for (var i = 0; i < this.maxSize; i++) {
-      if (this.pool[i].alive) {
-        ret.push(this.pool[i]);
-      }
-    }
-    return ret;
+    // const ret = [];
+    // for (var i = 0; i < this.maxSize; i++) {
+    //   if (this.pool[i].alive) {
+    //     ret.push(this.pool[i]);
+    //   }
+    // }
+    return this.pool.filter(item => item.alive);
   }
 
   animate() {

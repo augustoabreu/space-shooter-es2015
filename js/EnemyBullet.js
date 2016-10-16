@@ -6,7 +6,7 @@ export default class EnemyBullet extends BaseBullet {
   constructor(x, y, context, width, height, canvasWidth, canvasHeight, target) {
     super(x, y, context, width, height, canvasWidth, canvasHeight, target);
 
-    this.isCollidableWith = Ship;
+    this.collidableWith = Ship;
   }
   draw() {
     const self = this,
@@ -16,12 +16,13 @@ export default class EnemyBullet extends BaseBullet {
     self.context.clearRect(self.x-1, self.y-1, self.width+1, self.height+1);
     self.y -= self.speed;
 
-    if (self.isColliding) return;
+    if (self.isColliding) return true;
 
     if (self.y >= self.canvasHeight) {
       return true;
     } else {
       self.context.drawImage(enemyBulletImage, self.x, self.y);
+      return false;
     }
   }
 }

@@ -10,7 +10,7 @@ export default class Drawable {
     self.canvasWidth = canvasWidth;
     self.canvasHeight = canvasHeight;
     self.context = context;
-    self.collidableWith = "";
+    self.collidableWith = null;
     self.isColliding = false;
     self.type = "";
   }
@@ -24,6 +24,6 @@ export default class Drawable {
   }
 
   isCollidableWith(target) {
-    return (this.isCollidableWith === target.type);
+    return (this.collidableWith === target.constructor);
   }
 }

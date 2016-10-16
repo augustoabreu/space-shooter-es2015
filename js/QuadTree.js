@@ -14,14 +14,14 @@ export default class QuadTree {
   }
 
   clear() {
-    this.objets = [];
-    this.nodes.forEach((node) => node.clear())
+    this.objects = [];
+    this.nodes.forEach(node => node.clear());
     this.nodes = [];
   }
 
   getAllObjects(returnedObjects) {
-    this.nodes.forEach((node) => node.getAllObjects(returnedObjects));
-    this.objects.forEach((obj) => returnedObjects.push(obj));
+    this.nodes.forEach(node => node.getAllObjects(returnedObjects));
+    this.objects.forEach(obj => returnedObjects.push(obj));
     return returnedObjects;
   }
 
@@ -30,13 +30,14 @@ export default class QuadTree {
       return console.log('Undefined object');
     }
 
-    const index = this.getIndex(obj);
+    const self = this,
+          index = self.getIndex(obj);
 
-    if (index !== -1 && this.nodes.length) {
-      this.nodes[index].findObjects(returnedObjects, obj);
+    if (index !== -1 && self.nodes.length) {
+      self.nodes[index].findObjects(returnedObjects, obj);
     }
 
-    this.objects.forEach((obj) => returnedObjects.push(obj));
+    self.objects.forEach(obj => returnedObjects.push(obj));
 
     return returnedObjects;
   }
@@ -47,30 +48,30 @@ export default class QuadTree {
     const self = this;
 
     if (obj.constructor.name === 'Array') {
-      obj.forEach((objt) => self.insert(objt));
+      obj.forEach(objt => self.insert(objt));
       return;
     }
 
     if (self.nodes.length) {
       const index = self.getIndex(obj);
       if (index !== -1) {
-        self.nodex[index].insert(obj);
+        self.nodes[index].insert(obj);
         return;
       }
     }
 
-    self.objets.push(obj);
+    self.objects.push(obj);
 
-    if (self.objects.length > self.maxObjects && self.level < maxLevels) {
-      if (self.nodex[0] === null) {
+    if (self.objects.length > self.maxObjects && self.level < self.maxLevels) {
+      if (!self.nodes[0]) {
         self.split();
       }
       let i = 0;
-      while(i < self.objets.length) {
+      while(i < self.objects.length) {
         const obj = self.objects[i],
               index = self.getIndex(obj);
         if (index !== -1) {
-          self.nodes[index].insert(self.objects.splice(i, 1)[0]);
+          self.nodes[index].insert((self.objects.splice(i, 1))[0]);
         } else {
           i++;
         }
@@ -80,8 +81,9 @@ export default class QuadTree {
 
   getIndex(obj) {
     let index = -1;
-    const verticalMidPoint = this.bounds.x + this.bounds.width/2,
-          horizontalMidPoint = this.bounds.y + this.bounds.height/2;
+    const bounds = this.bounds,
+          verticalMidPoint = bounds.x + bounds.width/2,
+          horizontalMidPoint = bounds.y + bounds.height/2,
           topQuadrant = (obj.y < horizontalMidPoint && obj.y + obj.height < horizontalMidPoint),
           bottomQuadrant = (obj.y > horizontalMidPoint);
 
@@ -97,37 +99,39 @@ export default class QuadTree {
   }
 
   split() {
-    const subWidth = (this.bounds.width / 2) | 0,
-          subHeight = (this.bounds.height / 2) | 0;
+    const self = this,
+          bounds = self.bounds,
+          subWidth = (bounds.width / 2) | 0,
+          subHeight = (bounds.height / 2) | 0;
 
-    this.nodes[0] = new QuadTree({
-      x: this.bounds.x + subWidth,
-      y: this.bounds.y,
+    self.nodes[0] = new QuadTree({
+      x: bounds.x + subWidth,
+      y: bounds.y,
       width: subWidth,
       height: subHeight
-    }, this.level + 1);
+    }, self.level + 1);
 
-    this.nodes[1] = new QuadTree({
-      x: this.bounds.x,
-      y: this.bounds.y,
+    self.nodes[1] = new QuadTree({
+      x: bounds.x,
+      y: bounds.y,
       width: subWidth,
       height: subHeight
-    }, this.level + 1);
+    }, self.level + 1);
 
 
-    this.nodes[2] = new QuadTree({
-      x: this.bounds.x,
-      y: this.bounds.y + subHeight,
+    self.nodes[2] = new QuadTree({
+      x: bounds.x,
+      y: bounds.y + subHeight,
       width: subWidth,
       height: subHeight
-    }, this.level + 1);
+    }, self.level + 1);
 
 
-    this.nodes[3] = new QuadTree({
-      x: this.bounds.x + subWidth,
-      y: this.bounds.y + subHeight,
+    self.nodes[3] = new QuadTree({
+      x: bounds.x + subWidth,
+      y: bounds.y + subHeight,
       width: subWidth,
       height: subHeight
-    }, this.level + 1);
+    }, self.level + 1);
   }
 }

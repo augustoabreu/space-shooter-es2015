@@ -22,5 +22,6 @@ export default class BaseBullet extends Drawable {
     self.y = 0;
     self.speed = 0;
     self.alive = false;
+    self.isColliding = false;
   }
 }

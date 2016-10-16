@@ -1,19 +1,18 @@
 import Drawable from './Drawable';
 import ImageRepository from './ImageRepository';
 import EnemyBulletPool from './EnemyBulletPool';
+import Bullet from './Bullet';
 
 export default class Enemy extends Drawable {
   constructor(x, y, context, width, height, bulletPool) {
     super(x, y, context, width, height);
 
     const self = this;
-    self.x = x;
-    self.y = y;
-    self.speed = 0;
     self.percentFire = .01;
     self.chance = 0;
     self.alive = false;
     self.bulletPool = bulletPool;
+    self.collidableWith = Bullet;
   }
 
   spawn(x, y, speed) {
@@ -49,12 +48,17 @@ export default class Enemy extends Drawable {
       self.speedX = -self.speed;
     }
 
-    self.context.drawImage(enemyImage, self.x, self.y);
+    if (!self.isColliding) {
+      self.context.drawImage(enemyImage, self.x, self.y);
 
-    const chance = Math.floor(Math.random() * 101);
+      const chance = Math.floor(Math.random() * 101);
 
-    if (chance/100 < self.percentFire) {
-      self.fire();
+      if (chance/100 < self.percentFire) {
+        self.fire();
+      }
+      return false;
+    } else {
+      return true;
     }
   }
 

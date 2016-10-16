@@ -1,4 +1,6 @@
 import Background from './Background';
+import Enemy from './Enemy';
+import Bullet from './Bullet';
 import EnemyPool from './EnemyPool';
 import EnemyBulletPool from './EnemyBulletPool';
 import Ship from './Ship';
@@ -35,6 +37,8 @@ class Game {
           shipImage = imageRepository.getImage('ship'),
           shipX = canvasHeight/2 - shipImage.width,
           shipY = canvasHeight/4*3 - shipImage.height*2;
+
+    self.playerScore = 0;
 
     self.background = new Background(0, 0, self.bgContext, canvasWidth, canvasHeight, canvasWidth, canvasHeight);
 
@@ -75,14 +79,16 @@ class Game {
   start() {
     const self = this;
 
-    requestAnimationFrame(self.start.bind(self));
+    document.getElementById('score').innerHTML = self.playerScore;
 
-    // self.quadTree.clear();
-    // self.quadTree.insert(self.ship);
-    // self.quadTree.insert(self.ship.getBulletPool().getPool());
-    // self.quadTree.insert(self.enemyPool.getPool());
-    // self.quadTree.insert(self.enemyBulletPool.getPool());
-    //self.detectCollision();
+    self.quadTree.clear();
+    self.quadTree.insert(self.ship);
+    self.quadTree.insert(self.ship.getBulletPool().getPool());
+    self.quadTree.insert(self.enemyPool.getPool());
+    self.quadTree.insert(self.enemyBulletPool.getPool());
+    self.detectCollision();
+
+    requestAnimationFrame(self.start.bind(self));
 
     self.background.draw();
     self.ship.move();
@@ -98,12 +104,30 @@ class Game {
     self.quadTree.getAllObjects(objects);
 
     objects.forEach((obj, i) => {
-      const target = [];
-      self.quadTree.findObjects(target, obj);
-      target.forEach((targ, j) => {
-        if (obj.collidableWith) {}
+      const targets = [];
+      self.quadTree.findObjects(targets, obj);
+      targets.forEach((target, j) => {
+        if (obj.isCollidableWith(target) &&
+          (obj.x < target.x + target.width &&
+            obj.x + obj.width > target.x &&
+            obj.y < target.y + target.height &&
+            obj.y + obj.height > target.y)) {
+          obj.isColliding = true;
+          target.isColliding = true;
+          self.playerScore += self.getPoints(obj, target);
+        }
       })
     })
+  }
+
+  getPoints(first, second) {
+    const firstConstructor = first.constructor,
+          secondConstructor = second.constructor;
+    if ((firstConstructor === Enemy && secondConstructor === Bullet) ||
+        (firstConstructor === Bullet && secondConstructor === Enemy)) {
+      return 10;
+    }
+    return 0;
   }
 }
 

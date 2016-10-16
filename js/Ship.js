@@ -2,6 +2,7 @@ import Drawable from './Drawable';
 import ImageRepository from './ImageRepository';
 import BulletPool from './BulletPool';
 import KeyboardManager from './KeyboardManager';
+import EnemyBullet from './EnemyBullet';
 
 export default class Ship extends Drawable {
   constructor(x, y, context, width, height, canvasWidth, canvasHeight, bulletContext) {
@@ -10,6 +11,7 @@ export default class Ship extends Drawable {
     this.bulletPool = new BulletPool(30, bulletContext);
     this.fireRate = 15;
     this.counter = 0;
+    this.collidableWith = EnemyBullet;
   }
 
   draw() {
@@ -25,9 +27,9 @@ export default class Ship extends Drawable {
 
     this.counter++;
 
-    if (STATUS.left || STATUS.right || STATUS.down || STATUS.up) {
-      this.context.clearRect(this.x, this.y, this.width, this.height);
+    this.context.clearRect(this.x, this.y, this.width, this.height);
 
+    if (STATUS.left || STATUS.right || STATUS.down || STATUS.up) {
       if (STATUS.left) {
         this.x -= this.speed;
         if (this.x < 0) this.x = 0;
@@ -47,11 +49,13 @@ export default class Ship extends Drawable {
           this.y = this.canvasHeight - this.height;
         }
       }
+    }
 
+    if (!this.isColliding) {
       this.draw();
     }
 
-    if (STATUS.space && this.counter >= this.fireRate) {
+    if (STATUS.space && this.counter >= this.fireRate && !this.isColliding) {
       this.fire();
       this.counter = 0;
     }
